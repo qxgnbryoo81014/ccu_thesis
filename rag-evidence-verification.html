@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>碩論主題候選</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e6eaf0;--accent:#3157d5;--accent-soft:#eef2ff;--shadow:0 10px 30px rgba(15,23,42,.07);
+--bad:#b42318;--bad-bg:#fff5f5;--bad-line:#f4d3d3;--good:#127a43;--good-bg:#f1faf5;--good-line:#cbeeda}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top left,#eef3ff 0,transparent 36%),var(--bg);color:var(--text);font-family:Inter,"Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif}
+.shell{width:min(1000px,calc(100% - 32px));margin:34px auto 64px}
+.tabs{display:inline-flex;background:#e9edf5;padding:5px;border-radius:14px;gap:4px;margin-bottom:18px}
+.tab-btn{border:0;background:transparent;color:#687386;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer}
+.tab-btn.active{background:#fff;color:var(--accent);box-shadow:0 3px 10px rgba(15,23,42,.08)}
+.tab{display:none}.tab.active{display:block}
+.topic-card{background:linear-gradient(135deg,#20376f,#3157d5 62%,#5679e9);color:#fff;border-radius:22px;padding:26px 28px;box-shadow:0 18px 40px rgba(49,87,213,.18);margin-bottom:18px}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.72;margin-bottom:9px}
+.topic-card h1{margin:0;font-size:clamp(22px,3vw,31px);line-height:1.45;letter-spacing:-.02em}
+.topic-card p{margin:12px 0 0;font-size:14px;line-height:1.7;opacity:.92;max-width:760px}
+.panel{background:rgba(255,255,255,.94);border:1px solid rgba(226,232,240,.9);border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px}
+.panel h2{margin:0 0 6px;font-size:17px}
+.panel h2 span{display:inline-block;width:7px;height:18px;background:var(--accent);border-radius:99px;vertical-align:-3px;margin-right:9px}
+.sub{margin:0 0 16px 16px;color:var(--muted);font-size:13px}
+
+/* 實例對照 */
+.pipe{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;position:relative}
+.box{position:relative;border:1px solid var(--line);background:#fbfcfe;border-radius:13px;padding:11px 13px;font-size:13px;line-height:1.55}
+.box b{display:block;font-size:12px;color:var(--muted);margin-bottom:3px;letter-spacing:.03em}
+.box .big{font-size:15px;font-weight:800;color:var(--text)}
+.pipe .box:not(:last-child)::after{content:"";position:absolute;right:-22px;top:50%;width:16px;height:2px;background:#c5cee0}
+.pipe .box:not(:last-child)::before{content:"";position:absolute;right:-23px;top:calc(50% - 4px);border:5px solid transparent;border-left-color:#c5cee0;border-right:0}
+.box.warn{background:#fffaf0;border-color:#f3dfb6}
+.box.warn b{color:#9a6700}
+.split{margin:16px 0 0;display:grid;gap:10px}
+.lane{display:grid;grid-template-columns:120px 1fr 28px 1fr;align-items:center;gap:10px;border-radius:14px;padding:10px 12px}
+.lane.bad{background:var(--bad-bg);border:1px solid var(--bad-line)}
+.lane.good{background:var(--good-bg);border:1px solid var(--good-line)}
+.tag{font-size:12px;font-weight:800;letter-spacing:.03em}
+.bad .tag{color:var(--bad)}.good .tag{color:var(--good)}
+.lane .box{background:#fff}
+.arr{color:#a3acbd;text-align:center;font-weight:800}
+.res{font-weight:800}
+.bad .res{color:var(--bad)}.good .res{color:var(--good)}
+.fine{margin-top:10px;color:var(--muted);font-size:12px}
+
+/* 研究方法：四階段 */
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.stage{position:relative;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;flex-direction:column;overflow:visible}
+.stage:not(:last-child)::after{content:"";position:absolute;right:-17px;top:34px;border:6px solid transparent;border-left:8px solid #b8c3da;border-right:0}
+.st-head{display:flex;align-items:center;gap:10px;padding:13px 14px;background:#f3f5f9;border-bottom:1px solid var(--line);border-radius:14px 14px 0 0;min-height:68px}
+.st-n{flex:none;width:32px;height:32px;border-radius:50%;background:#fff;border:2px solid #b8c3da;color:#56627a;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.st-t{font-size:16px;font-weight:800;line-height:1.3}
+.st-t small{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:1px}
+.stage.key{border-color:#b9c8f7}
+.stage.key .st-head{background:var(--accent);border-bottom-color:var(--accent);color:#fff}
+.stage.key .st-n{background:#fff;border-color:#fff;color:var(--accent)}
+.stage.key .st-t small{color:rgba(255,255,255,.75)}
+.st-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.st-goal{font-size:12.5px;color:#3d4a63;line-height:1.5;background:#f8faff;border-left:3px solid #c7d3fb;padding:6px 9px;border-radius:0 8px 8px 0}
+.stage.key .st-body{background:#f7f9ff;border-radius:0 0 14px 14px}
+.stage.key .st-goal{background:#fff}
+.item{font-size:13px;line-height:1.5;padding-left:12px;position:relative}
+.item::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:#9aa8c4}
+.key .item::before{background:var(--accent)}
+.item .t{font-weight:700}
+.item .d{color:var(--muted);font-size:12px}
+.resource-link{display:inline-flex;align-items:center;gap:5px;margin-top:3px;color:var(--accent);font-size:12px;font-weight:700;text-decoration:none}
+.resource-link::before{content:"↗";font-size:11px}
+.resource-link:hover{text-decoration:underline}
+
+
+/* 研究動機 */
+.chain{display:grid;grid-template-columns:repeat(3,1fr) ;gap:28px}
+.chain .box{background:#fff}
+.chain .box:not(:last-child)::after{content:"";position:absolute;right:-22px;top:50%;width:16px;height:2px;background:#c5cee0}
+.chain .box:not(:last-child)::before{content:"";position:absolute;right:-23px;top:calc(50% - 4px);border:5px solid transparent;border-left-color:#c5cee0;border-right:0}
+.chain .box .big{display:block;margin-bottom:4px}
+.aim{margin-top:14px;background:var(--accent-soft);border:1px solid #c7d3fb;border-radius:13px;padding:12px 14px;font-size:14px;line-height:1.6}
+.aim b{color:var(--accent)}
+/* 比較表 */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.tbl th{white-space:nowrap;background:#f3f5f9;text-align:left;font-size:12px;color:#56627a;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{font-weight:700;white-space:nowrap}
+.tbl td small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.tbl tr.me td{background:var(--accent-soft)}
+.tbl tr.me td:first-child{color:var(--accent)}
+.y{color:var(--good);font-weight:700}.n{color:var(--bad);font-weight:700}
+/* 預期貢獻 */
+.contrib{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ct{border:1px solid var(--line);border-radius:13px;padding:14px;background:#fbfcfe}
+.ct .k{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;color:#fff;background:var(--accent);border-radius:99px;padding:3px 10px;margin-bottom:8px}
+.ct .h{font-size:14.5px;font-weight:800;margin-bottom:5px}
+.ct .d{font-size:12.5px;color:var(--muted);line-height:1.6}
+.tbl-wrap{overflow-x:auto}
+
+
+/* 2x2 定位 */
+.quad{display:grid;grid-template-columns:110px 1fr 1fr;gap:8px;font-size:13px}
+.quad .hd{font-size:12px;font-weight:800;color:#56627a;display:flex;align-items:center;justify-content:center;text-align:center;background:#f3f5f9;border-radius:10px;padding:8px}
+.quad .cell{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcfe;min-height:78px}
+.quad .cell.me{border:2px solid var(--accent);background:var(--accent-soft)}
+.quad .cell.weak{background:var(--bad-bg);border-color:var(--bad-line)}
+.chip{display:inline-block;margin:0 6px 6px 0;padding:4px 10px;border-radius:99px;background:#fff;border:1px solid var(--line);font-weight:700;font-size:12.5px}
+.chip.me{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip small{font-weight:400;color:var(--muted);margin-left:4px}
+.cell .why{font-size:12px;color:var(--muted);line-height:1.5}
+.weak .why{color:var(--bad)}
+.takeaway{margin-top:12px;font-size:13.5px;line-height:1.65;border-left:4px solid var(--accent);padding:8px 12px;background:#f8faff;border-radius:0 10px 10px 0}
+/* 執行規劃 */
+.plan{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:12px;align-items:stretch}
+.ph{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fbfcfe}
+.ph .when{font-size:11.5px;font-weight:800;color:var(--accent);letter-spacing:.04em}
+.ph .h{font-size:14.5px;font-weight:800;margin:3px 0 6px}
+.ph ul{margin:0;padding-left:16px;font-size:12.5px;color:#3d4a63;line-height:1.6}
+.ph.gate{background:#fffaf0;border-color:#f3dfb6}
+.ph.gate .when{color:#9a6700}
+.route{font-size:12.5px;line-height:1.5;padding:6px 8px;border-radius:8px;margin-top:6px;background:#fff;border:1px solid #f0e2c4}
+.route b{display:block}
+.ask{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.ask .q{background:#fff}
+
+/* 研究問題 */
+.rqs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.q{background:#f8faff;border:1px solid #e4e9f7;border-radius:13px;padding:13px 14px}
+.q small{display:block;color:var(--accent);font-weight:800;margin-bottom:4px}
+.q div{font-size:14px;line-height:1.55}
+.q .m{margin-top:6px;font-size:12px;color:var(--muted)}
+.note{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:13px;line-height:1.6}
+
+@media(max-width:860px){
+  .pipe,.stages,.rqs,.chain,.contrib,.plan,.ask,.quad{grid-template-columns:1fr}
+  .pipe .box::after,.pipe .box::before,.chain .box::after,.chain .box::before,.stage::after{display:none}
+  .lane{grid-template-columns:1fr}
+  .arr{display:none}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="topic1">主題一</button>
+  </div>
+
+  <section id="topic1" class="tab active">
+    <div class="topic-card">
+      <div class="kicker">TOPIC 01</div>
+      <h1>以跨段落佐證改善小型檢索增強生成模型對誤導證據之棄答</h1>
+      <p>小型 RAG 模型遇到被改寫的錯誤段落時會照抄。既有的作答前檢查以模型的閉卷答案為基準，模型自己也記錯時便會放行。本研究改為檢查「依段落作答的答案」是否獲得多個段落佐證，不依賴模型自身記憶，並在含答案段落數與誤導段落數不同的情境下評估其效果與誤擋代價。</p>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>研究動機與應用情境</h2>
+      <p class="sub">由部署情境推導出本研究要處理的缺口</p>
+      <div class="chain">
+        <div class="box"><b>應用情境</b><span class="big">企業內部以本地小模型建置知識問答</span>內部文件不宜傳送至外部服務，且運算成本有限，因此常採用 8B 以下之開源模型搭配檢索。</div>
+        <div class="box warn"><b>由此產生的問題</b><span class="big">檢索到錯誤段落時，小模型會照抄</span>GRAB-RAG 報告：凍結之 3.8B–8B 模型在明確的棄答提示下，面對誤導段落仍有 41.6% 作答，其中 63% 直接沿用段落中被植入的錯誤實體。</div>
+        <div class="box"><b>既有防護的缺口</b><span class="big">檢查機制都依賴模型自身記憶</span>GRAB-RAG 的衝突檢查與 NLI 驗證皆以閉卷答案為基準；閉卷記憶與誤導段落錯得一致時，NLI 驗證失效。作者說明兩者皆為診斷基準，未提出可部署之防護方法。</div>
+      </div>
+      <div class="aim"><b>研究目的　</b>在不重新訓練模型、且不依賴模型閉卷答案的前提下，提出小型 RAG 系統可直接採用的作答前驗證機制，降低照抄誤導段落的比例，並量化其在不同證據條件下對正常題目造成的誤擋代價。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>問題示例與方法概念</h2>
+      <p class="sub">示意題目，非實驗資料；段落配置與 GRAB-RAG 誤導條件相同：1 段被改寫，其餘 4 段不含答案</p>
+      <div class="pipe">
+        <div class="box"><b>問題</b><span class="big">澳洲的首都是？</span><br>正確答案：坎培拉</div>
+        <div class="box warn"><b>檢索到 5 段</b>1 段被改寫為「澳洲首都雪梨是全國政治中心」；其餘 4 段與首都無關</div>
+        <div class="box warn"><b>模型作答</b><span class="big">雪梨</span><br>照抄誤導段落；不給段落時（閉卷）也答雪梨</div>
+      </div>
+      <div class="split">
+        <div class="lane bad">
+          <div class="tag">既有方法<br>NLI 驗證（P4）</div>
+          <div class="box">以閉卷答案「雪梨」為假設逐段檢查：被改寫段落「支持」，其餘段落「無關」，沒有任何段落「矛盾」</div>
+          <div class="arr">→</div>
+          <div class="box res">放行，輸出「雪梨」：答錯</div>
+        </div>
+        <div class="lane good">
+          <div class="tag">本研究<br>跨段落佐證</div>
+          <div class="box">不看閉卷答案，改問：依段落作答的「雪梨」有幾段支持？只有 1 段，未達至少 2 段的門檻</div>
+          <div class="arr">→</div>
+          <div class="box res">棄答：錯誤答案被擋下</div>
+        </div>
+      </div>
+      <div class="fine">代價：真實檢索中，正確答案也常只出現在一段，同一規則可能誤擋正確答案。這是 RQ2、RQ3 要量化的部分，也是方法需在 GRAB-RAG 以外的證據條件下評估的原因。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>與既有方法之比較</h2>
+      <p class="sub">依兩個條件分類：是否需額外訓練、驗證時是否依賴模型自身記憶</p>
+      <div class="quad">
+        <div></div><div class="hd">不依賴模型自身記憶</div><div class="hd">依賴模型自身記憶</div>
+        <div class="hd">需額外訓練</div>
+        <div class="cell"><span class="chip">CRAG<small>Yan et al., 2024</small></span><div class="why">需訓練檢索評估器，不符合直接套用於凍結小模型之情境</div></div>
+        <div class="cell"><span class="chip">Self-RAG<small>Asai et al., ICLR 2024</small></span><div class="why">需微調生成模型</div></div>
+        <div class="hd">免訓練</div>
+        <div class="cell me"><span class="chip me">本研究</span><span class="chip">RobustRAG<small>Xiang et al., 2024</small></span><div class="why">本研究與 RobustRAG 同屬此格，為主要比較對象</div></div>
+        <div class="cell weak"><span class="chip">棄答提示 P1</span><span class="chip">衝突檢查 P3</span><span class="chip">NLI 驗證 P4</span><span class="chip">Astute RAG<small>Wang et al., ACL 2025</small></span><div class="why">模型自身記憶與誤導段落一致時，檢查會放行錯誤答案</div></div>
+      </div>
+      <div class="takeaway">本研究與 RobustRAG 同為免訓練、不依賴自身記憶。兩者差異在於：RobustRAG 為抵禦蓄意攻擊而設計，各段落須分別生成回答；本研究以棄答為目標，只生成一次，再以小型 NLI 模型檢查佐證段數。兩者在誤擋率與運算成本上的差異，由試跑與主實驗量測。</div>
+      <div class="fine">P1、P3、P4 為 GRAB-RAG 之基準方法，依全文整理；其餘方法依文獻摘要整理，細節待閱讀全文確認。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>研究方法</h2>
+      <p class="sub">由左至右依序進行；藍色標題的階段 3、4 為本研究的核心</p>
+      <div class="stages">
+        <div class="stage">
+          <div class="st-head"><span class="st-n">1</span><div class="st-t"><small>STEP 1</small>準備環境並重現基準</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：確認和前人研究的是同一個問題</div>
+          <div class="item"><div class="t">資料與檢索</div><div class="d">Natural Questions、HotpotQA；每題 5 段</div><a class="resource-link" href="https://github.com/RUC-NLPIR/FlashRAG" target="_blank" rel="noopener">FlashRAG</a></div>
+          <div class="item"><div class="t">模型</div><div class="d">3 個 3.8B 至 8B 開源小模型，4-bit 量化</div></div>
+          <div class="item"><div class="t">重現 P0–P4</div><div class="d">使用 GRAB-RAG 公開的程式與四種段落條件，數字須接近原文</div><a class="resource-link" href="https://github.com/andre44s/grab-rag" target="_blank" rel="noopener">GRAB-RAG 程式碼</a></div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="st-head"><span class="st-n">2</span><div class="st-t"><small>STEP 2</small>找出失效題</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：分出既有方法擋不住的題目</div>
+          <div class="item"><div class="t">閉卷作答</div><div class="d">不給段落，記下模型自己的答案</div></div>
+          <div class="item"><div class="t">分組</div><div class="d">閉卷答案和誤導段落一樣錯的，就是 P4 會失效的題</div></div>
+          </div>
+        </div>
+        <div class="stage key">
+          <div class="st-head"><span class="st-n">3</span><div class="st-t"><small>STEP 3</small>加入新方法並比較</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：證明改善落在失效題上</div>
+          <div class="item"><div class="t">跨段落佐證</div><div class="d">以 NLI 檢查依段落作答的答案有幾段支持；未達門檻即棄答</div><a class="resource-link" href="https://huggingface.co/microsoft/deberta-large-mnli" target="_blank" rel="noopener">DeBERTa MNLI</a></div>
+          <div class="item"><div class="t">比較六種作法</div><div class="d">P1、P3、P4、RobustRAG、Astute 式整合、本研究</div></div>
+          <div class="item"><div class="t">看兩個數字</div><div class="d">誤導題答錯率、正常題誤擋率</div></div>
+          </div>
+        </div>
+        <div class="stage key">
+          <div class="st-head"><span class="st-n">4</span><div class="st-t"><small>STEP 4</small>擴充評估情境</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：排除效果只來自基準資料的段落配置</div>
+          <div class="item"><div class="t">自然檢索條件</div><div class="d">正常題中含答案的段落數 1–5 段不等，量測單一證據時的誤擋</div></div>
+          <div class="item"><div class="t">多段誤導</div><div class="d">被改寫段落由 1 段增加至 3 段，觀察佐證門檻何時被突破</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>研究問題</h2>
+      <p class="sub">對應階段 3、4 的比較結果</p>
+      <div class="rqs">
+        <div class="q"><small>RQ1　防護效果</small><div>閉卷記憶與誤導段落一致時，跨段落佐證能否擋下 P4 放行的錯誤答案？</div><div class="m">看：失效題的答錯率</div></div>
+        <div class="q"><small>RQ2　誤擋代價</small><div>正確答案只有一段支持時，被誤擋而棄答的比例增加多少？</div><div class="m">看：正常題的誤擋率，依含答案段落數分組</div></div>
+        <div class="q"><small>RQ3　適用條件</small><div>效果在哪些證據條件與模型下成立、在哪些條件下失效？</div><div class="m">看：誤導段落數、單跳或多跳、模型</div></div>
+      </div>
+      <div class="note">暫定資料：Natural Questions、HotpotQA（沿用 GRAB-RAG 之建構程式）<br>GRAB-RAG 誤導條件：1 段正確段落被替換答案，另配 4 段不含答案之段落，共 5 段；作者於限制中說明：每題僅 1 段誤導、多段誤導留待後續；P3、P4 依賴閉卷答案，且未提出可部署之防護。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>預期貢獻</h2>
+      <div class="contrib">
+        <div class="ct"><span class="k">方法</span><div class="h">不依賴閉卷答案之作答前驗證</div><div class="d">以現成 NLI 模型檢查答案是否獲多段佐證，免訓練、可直接加在既有小型 RAG 系統之生成步驟後，處理 GRAB-RAG 作者列為未解決的閉卷錨點依賴問題。</div></div>
+        <div class="ct"><span class="k">分析</span><div class="h">在同一環境比較既有防護</div><div class="d">將 GRAB-RAG 基準、RobustRAG 與 Astute 式整合置於相同小模型與資料下，量化各方法在「閉卷記憶亦錯」題目上的失效程度。</div></div>
+        <div class="ct"><span class="k">實務</span><div class="h">防護效果與誤擋代價之取捨</div><div class="d">依含答案段落數與誤導段落數報告兩項指標，提供部署時設定佐證門檻之依據。</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><span></span>執行規劃與決策點</h2>
+      <p class="sub">先以小規模試跑確認成果方向，再投入主實驗</p>
+      <div class="plan">
+        <div class="ph"><div class="when">第 1–3 個月</div><div class="h">重現基準與試跑</div><ul><li>以 GRAB-RAG 程式重現 P0–P4</li><li>試跑：NQ 200 題、1 個模型</li><li>比較 P4、RobustRAG、本研究</li></ul></div>
+        <div class="ph gate"><div class="when">第 3 個月　決策點</div><div class="h">依試跑結果選擇方向</div>
+          <div class="route"><b>繼續方法研究</b>失效題答錯率明顯低於 P4，且誤擋率不高於 RobustRAG</div>
+          <div class="route"><b>轉為分析型論文</b>僅部分條件成立：主軸改為既有防護之失效分析</div>
+          <div class="route"><b>改用備選題目</b>無改善：轉向備選方向（語言模型評審之偏誤校正，結合代理人軌跡資料篩選）</div>
+        </div>
+        <div class="ph"><div class="when">第 4–9 個月</div><div class="h">主實驗</div><ul><li>3 個模型 × 2 個資料集</li><li>研究方法階段 3、4</li><li>統計檢定：McNemar、bootstrap</li></ul></div>
+        <div class="ph"><div class="when">第 10–18 個月</div><div class="h">分析與撰寫</div><ul><li>補充實驗與限制分析</li><li>論文撰寫與口試</li></ul></div>
+      </div>
+      <div class="ask">
+        <div class="q"><small>討論事項 1</small><div>試跑結果不如預期時，是否接受論文轉為分析型（比較既有防護方法之失效條件）？</div></div>
+        <div class="q"><small>討論事項 2</small><div>是否加入醫療問答資料集（如 PubMedQA），驗證方法於高風險領域之適用性？</div></div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');});});
+</script>
+</body>
+</html>
