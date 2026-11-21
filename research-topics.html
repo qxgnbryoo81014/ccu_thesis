@@ -143,6 +143,7 @@ body{margin:0;background:radial-gradient(circle at top left,#eef3ff 0,transparen
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="topic1">主題一</button>
+    <button class="tab-btn" data-tab="topic2">主題二</button>
   </div>
 
   <section id="topic1" class="tab active">
@@ -284,6 +285,149 @@ body{margin:0;background:radial-gradient(circle at top left,#eef3ff 0,transparen
     </div>
 
   </section>
+
+  <section id="topic2" class="tab">
+    <div class="topic-card">
+      <div class="kicker">TOPIC 02</div>
+      <h1>以成本感知序列決策比較 RAG 索引維護策略於演化語料之成本與答案品質</h1>
+      <p>企業 RAG 系統上線後，文件會持續新增、改版、作廢。索引不更新會以過時內容作答；只做局部更新，索引結構會逐漸退化；全量重建則成本高。實務上多以固定排程或經驗門檻決定維護時機。本研究在逐期變動的語料上，比較固定策略與 Double DQN 學習式策略在相同維護預算下的過時答案比例與累積成本，並檢驗一般機器學習「週期式不輸反應式」的結論是否移轉至 RAG。</p>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>研究動機與應用情境</h2>
+      <p class="sub">由部署後的維運情境推導出本研究要處理的缺口</p>
+      <div class="chain">
+        <div class="box"><b>應用情境</b><span class="big">企業內部文件持續變動的 RAG 系統</span>規章、手冊、產品文件逐期新增、改版或作廢，但向量索引是上線時建立的，不會自動跟著改變。</div>
+        <div class="box warn"><b>由此產生的問題</b><span class="big">過時內容與索引退化同時發生</span>公開實驗中，新事件的問題在舊索引上只答對 0.3%，更新索引後為 99%。FreshDiskANN 顯示 HNSW 等圖索引在連續插入與刪除後召回率明顯下降；IVF 索引的分群中心在資料分佈改變後會把新向量分到錯誤分區。</div>
+        <div class="box"><b>既有作法的缺口</b><span class="big">維護時機依賴經驗規則</span>實務多採固定排程或「語料變動約一成就重建」。ECT-QA 作者指出多數 RAG 評估假設只建一次索引；一般機器學習的重新訓練時機研究以線性線上學習器評估；索引層級的修復時機研究只看召回率。</div>
+      </div>
+      <div class="aim"><b>研究目的　</b>在相同維護預算下，比較固定與學習式索引維護策略的過時答案比例與累積成本，提供 RAG 系統設定維運排程與預算的依據，並檢驗既有的維護結論在 RAG 端到端層級是否成立。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>問題示例與方法概念</h2>
+      <p class="sub">示意情境，非實驗資料；數字僅用於說明決策方式</p>
+      <div class="pipe">
+        <div class="box"><b>第 1 期</b><span class="big">建立索引</span><br>以當期全部文件建立 IVF 索引</div>
+        <div class="box warn"><b>第 2–4 期</b>每期部分文件改版、部分文件新增，只做局部更新</div>
+        <div class="box warn"><b>第 4 期</b><span class="big">索引已退化</span><br>分群中心不符新分佈，部分新文件被分到錯誤分區，抽查答錯率上升</div>
+      </div>
+      <div class="split">
+        <div class="lane bad">
+          <div class="tag">既有作法<br>固定排程</div>
+          <div class="box">規則為「每 6 期全量重建一次」，第 4 期未到排程，只做局部更新</div>
+          <div class="arr">→</div>
+          <div class="box res">第 4–6 期持續出現過時或檢索不到的答案</div>
+        </div>
+        <div class="lane good">
+          <div class="tag">本研究<br>學習式策略</div>
+          <div class="box">觀察到「累積變動量大、距上次重建已久、抽查答錯率上升」，選擇全量重建</div>
+          <div class="arr">→</div>
+          <div class="box res">第 5 期起恢復，之後改回局部更新以控制成本</div>
+        </div>
+      </div>
+      <div class="fine">代價：學習式策略也可能過度重建而增加成本。一般機器學習研究發現週期式重新訓練常優於反應式策略，索引層級的研究也得到「訊號觸發未勝過固定排程」的負面結果；學習式策略能否勝出，正是 RQ2、RQ3 要檢驗的部分。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>與既有方法之比較</h2>
+      <p class="sub">依兩個條件分類：評估層級是否涵蓋 RAG 答案品質、維護決策是否考慮成本</p>
+      <div class="quad">
+        <div></div><div class="hd">固定排程或規則觸發</div><div class="hd">成本感知決策</div>
+        <div class="hd">一般機器學習或索引層級</div>
+        <div class="cell"><span class="chip">圖索引修復時機<small>arXiv 2607.00728, 2026</small></span><span class="chip">FreshDiskANN<small>Singh et al., 2021</small></span><span class="chip">重新訓練策略實證<small>Dasari, 2026</small></span><div class="why">只看召回率或模型準確率，未涵蓋 RAG 答案品質</div></div>
+        <div class="cell"><span class="chip">CARA<small>Mahadevan &amp; Mathioudakis, 2024</small></span><span class="chip">RCCDA<small>Piaseczny et al., 2025</small></span><span class="chip">RAR<small>arXiv 2611.02251, 2026</small></span><div class="why">處理一般模型的重新訓練，未涵蓋索引的局部更新與全量重建</div></div>
+        <div class="hd">RAG 端到端層級</div>
+        <div class="cell weak"><span class="chip">業界維運建議</span><span class="chip">ECT-QA<small>arXiv 2510.13590</small></span><span class="chip">StreamingQA<small>Liska et al., ICML 2022</small></span><div class="why">經驗排程未比較成本與品質；時間敏感基準評估增量更新能力，但未比較維護時機策略</div></div>
+        <div class="cell me"><span class="chip me">本研究</span><div class="why">以 RAG 答案正確率評估，同時納入內容過時與索引退化，比較固定與學習式維護策略</div></div>
+      </div>
+      <div class="takeaway">本研究把一般機器學習的成本感知重新訓練決策，與索引層級的維護研究，延伸到 RAG 端到端答案品質。與最接近的圖索引修復時機研究相比，差異在三點：評估答案品質而非只看召回率；動作包含不動、局部更新、全量重建三種；加入學習式策略。</div>
+      <div class="fine">CARA、RCCDA、ECT-QA、StreamingQA、圖索引修復時機研究依摘要或部分全文整理，細節待閱讀全文確認。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>研究方法</h2>
+      <p class="sub">由左至右依序進行；藍色標題的階段 3、4 為本研究的核心</p>
+      <div class="stages">
+        <div class="stage">
+          <div class="st-head"><span class="st-n">1</span><div class="st-t"><small>STEP 1</small>建立演化語料環境</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：讓文件逐期變動的情境可重現</div>
+          <div class="item"><div class="t">資料</div><div class="d">StreamingQA 時間戳新聞與問題，取一段期間切成 12 期</div><a class="resource-link" href="https://arxiv.org/abs/2205.11388" target="_blank" rel="noopener">StreamingQA</a></div>
+          <div class="item"><div class="t">索引</div><div class="d">FAISS IVF 索引，支援局部新增與全量重建</div><a class="resource-link" href="https://github.com/facebookresearch/faiss" target="_blank" rel="noopener">FAISS</a></div>
+          <div class="item"><div class="t">生成模型</div><div class="d">3B 至 8B 開源小模型，4-bit 量化</div></div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="st-head"><span class="st-n">2</span><div class="st-t"><small>STEP 2</small>量測退化與成本</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：取得各維護動作的效果與成本參數</div>
+          <div class="item"><div class="t">退化速度</div><div class="d">連續局部更新下，檢索召回率隨期數的變化</div></div>
+          <div class="item"><div class="t">動作成本</div><div class="d">不動、局部更新、全量重建各自的嵌入計算量</div></div>
+          <div class="item"><div class="t">監測題組</div><div class="d">固定小題組，量測每期的過時答案比例</div></div>
+          </div>
+        </div>
+        <div class="stage key">
+          <div class="st-head"><span class="st-n">3</span><div class="st-t"><small>STEP 3</small>比較固定與學習式策略</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：在相同預算下比較策略的成本與品質</div>
+          <div class="item"><div class="t">固定策略</div><div class="d">從不更新、每期全量、每期增量、每 k 期全量、門檻觸發、漂移觸發</div></div>
+          <div class="item"><div class="t">學習式策略</div><div class="d">Double DQN；狀態含變動比例、距上次重建期數、抽查答錯率</div><a class="resource-link" href="https://github.com/DLR-RM/stable-baselines3" target="_blank" rel="noopener">Stable-Baselines3</a></div>
+          <div class="item"><div class="t">看兩個數字</div><div class="d">累積維護成本、過時答案比例</div></div>
+          </div>
+        </div>
+        <div class="stage key">
+          <div class="st-head"><span class="st-n">4</span><div class="st-t"><small>STEP 4</small>泛化與移轉檢驗</div></div>
+          <div class="st-body">
+          <div class="st-goal">目的：排除結果只來自特定時段或變動速度</div>
+          <div class="item"><div class="t">未見時段</div><div class="d">以訓練時未使用的時間區段測試學習式策略</div></div>
+          <div class="item"><div class="t">變動速度</div><div class="d">調整每期變動比例，比較快變與慢變語料下的策略排名</div></div>
+          <div class="item"><div class="t">結論移轉</div><div class="d">檢驗「週期式不輸反應式」在 RAG 上是否成立</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>研究問題</h2>
+      <p class="sub">對應階段 3、4 的比較結果</p>
+      <div class="rqs">
+        <div class="q"><small>RQ1　固定策略比較</small><div>相同維護預算下，週期式、門檻式與漂移觸發式策略的過時答案比例與累積成本各為何？</div><div class="m">看：成本與過時答案比例的取捨曲線</div></div>
+        <div class="q"><small>RQ2　學習式策略</small><div>Double DQN 學到的維護策略，能否在相同預算下優於最佳的固定策略？</div><div class="m">看：未見時段的過時答案比例與累積成本</div></div>
+        <div class="q"><small>RQ3　結論移轉</small><div>一般機器學習與索引層級「固定排程不輸反應式」的結論，在 RAG 端到端層級是否成立？</div><div class="m">看：不同變動速度下的策略排名</div></div>
+      </div>
+      <div class="note">暫定資料：StreamingQA（14 年時間戳 WMT 新聞語料，知識於評估時逐步釋出）<br>限制：新聞語料以新增為主，企業文件以改版、作廢為主，外推至企業情境需保守；維護成本以運算量估計，非實際帳單；索引退化幅度依索引類型與參數而異，需於階段 2 實測。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span></span>預期貢獻</h2>
+      <div class="contrib">
+        <div class="ct"><span class="k">評估</span><div class="h">考量時間與成本的 RAG 維護評估框架</div><div class="d">以累積成本與過時答案比例評估一整段期間的系統表現，補上多數 RAG 評估只建一次索引的盲點。</div></div>
+        <div class="ct"><span class="k">分析</span><div class="h">既有維護結論之移轉檢驗</div><div class="d">檢驗一般機器學習與索引層級的維護結論在 RAG 上是否成立；結論成立或被推翻，都能說明 RAG 維護的特性。</div></div>
+        <div class="ct"><span class="k">實務</span><div class="h">維運排程與預算之依據</div><div class="d">依文件變動速度與預算提供策略選擇建議，可直接用於系統交付後的維運規劃。</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><span></span>執行規劃與決策點</h2>
+      <p class="sub">先以小規模試跑確認取捨存在，再投入主實驗</p>
+      <div class="plan">
+        <div class="ph"><div class="when">第 1–3 個月</div><div class="h">建立環境與試跑</div><ul><li>StreamingQA 一段期間、12 期、每期 100 題</li><li>量測局部更新下的召回率退化</li><li>比較 4 種固定策略</li></ul></div>
+        <div class="ph gate"><div class="when">第 3 個月　決策點</div><div class="h">依試跑結果選擇方向</div>
+          <div class="route"><b>繼續方法研究</b>固定策略之間的成本與答錯率差異明顯，加入學習式策略</div>
+          <div class="route"><b>轉為分析型論文</b>差異只在部分變動速度成立：主軸改為既有維護結論之移轉檢驗</div>
+          <div class="route"><b>改用備選題目</b>差異不明顯：轉向備選方向（以元啟發式與貝氏最佳化比較地端 RAG 組態搜尋）</div>
+        </div>
+        <div class="ph"><div class="when">第 4–9 個月</div><div class="h">主實驗</div><ul><li>研究方法階段 3、4</li><li>多個隨機種子與未見時段測試</li><li>統計檢定：配對檢定、bootstrap</li></ul></div>
+        <div class="ph"><div class="when">第 10–18 個月</div><div class="h">分析與撰寫</div><ul><li>補充實驗與限制分析</li><li>論文撰寫與口試</li></ul></div>
+      </div>
+      <div class="ask">
+        <div class="q"><small>討論事項 1</small><div>學習式策略若未勝過固定策略，是否接受論文以「既有維護結論之移轉檢驗」為主軸？</div></div>
+        <div class="q"><small>討論事項 2</small><div>除 StreamingQA 外，是否需要加入以改版、作廢為主、較接近企業文件的語料？</div></div>
+      </div>
+    </div>
+
+  </section>
+
 
 </div>
 <script>
